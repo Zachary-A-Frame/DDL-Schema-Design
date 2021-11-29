@@ -1,21 +1,45 @@
 -- from the terminal run:
 -- psql < outer_space.sql
 
-DROP DATABASE IF EXISTS outer_space;
-
-CREATE DATABASE outer_space;
-
-\c outer_space
-
 CREATE TABLE planets
 (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
   orbital_period_in_years FLOAT NOT NULL,
-  orbits_around TEXT NOT NULL,
-  galaxy TEXT NOT NULL,
-  moons TEXT[]
+  CONSTRAINT orbits_around
+    FOREIGN KEY(id)
+      REFERENCES stars.id,
+  CONSTRAINT galaxy
+    FOREIGN KEY(id)
+      REFERENCES galaxies.id,
+  CONSTRAINT moons
+    FOREIGN KEY(id)
+      REFERENCES moons.id
 );
+
+CREATE TABLE galaxies
+(
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
+CREATE TABLE moons
+(
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  CONSTRAINT orbits_around
+    FOREIGN KEY(id)
+      REFERENCES planets.id
+);
+
+CREATE TABLE stars
+(
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+-- CONSTRAINT artist
+--     FOREIGN KEY(id)
+--       REFERENCES artists.id
 
 INSERT INTO planets
   (name, orbital_period_in_years, orbits_around, galaxy, moons)

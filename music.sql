@@ -1,11 +1,11 @@
 -- from the terminal run:
 -- psql < music.sql
 
-DROP DATABASE IF EXISTS music;
+-- DROP DATABASE IF EXISTS music;
 
-CREATE DATABASE music;
+-- CREATE DATABASE music;
 
--- \c music
+-- -- \c music
 
 CREATE TABLE songs
 (
@@ -13,10 +13,29 @@ CREATE TABLE songs
   title TEXT NOT NULL,
   duration_in_seconds INTEGER NOT NULL,
   release_date DATE NOT NULL,
-  artists TEXT[] NOT NULL,
-  album TEXT NOT NULL,
-  producers TEXT[] NOT NULL
+  producers TEXT NOT NULL,
+  CONSTRAINT artist
+    FOREIGN KEY(id)
+      REFERENCES artists.id,
+  CONSTRAINT album
+    FOREIGN KEY(id)
+      REFERENCES albums.id
 );
+
+CREATE TABLE artists
+(
+  id SERIAL PRIMARY KEY,
+  name TEXT,
+);
+
+CREATE TABLE albums
+(
+  id SERIAL PRIMARY KEY,
+  title TEXT,
+  CONSTRAINT artist
+    FOREIGN KEY(id)
+      REFERENCES artists.id
+)
 
 INSERT INTO songs
   (title, duration_in_seconds, release_date, artists, album, producers)

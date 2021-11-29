@@ -1,26 +1,54 @@
 -- from the terminal run:
 -- psql < air_traffic.sql
 
-DROP DATABASE IF EXISTS air_traffic;
+-- DROP DATABASE IF EXISTS air_traffic;
 
-CREATE DATABASE air_traffic;
+-- CREATE DATABASE air_traffic;
 
-\c air_traffic
+-- \c air_traffic
 
 CREATE TABLE tickets
 (
   id SERIAL PRIMARY KEY,
-  first_name TEXT NOT NULL,
-  last_name TEXT NOT NULL,
+  first_name TEXT REFERENCES passengers(first_name) NOT NULL,
+  last_name TEXT REFERENCES passengers(last_name) NOT NULL,
   seat TEXT NOT NULL,
   departure TIMESTAMP NOT NULL,
   arrival TIMESTAMP NOT NULL,
-  airline TEXT NOT NULL,
-  from_city TEXT NOT NULL,
-  from_country TEXT NOT NULL,
-  to_city TEXT NOT NULL,
-  to_country TEXT NOT NULL
+  airline TEXT REFERENCES airlines ON DELETE SET NULL,
+  from_city TEXT REFERENCES cities ON DELETE SET NULL,
+  from_country TEXT REFERENCES countries ON DELETE SET NULL,
+  to_city TEXT REFERENCES cities ON DELETE SET NULL,
+  to_country TEXT REFERENCES countries ON DELETE SET NULL
 );
+
+CREATE TABLE countries
+(
+  countries_id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
+CREATE TABLE airlines
+(
+  airlines_id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
+CREATE TABLE cities
+(
+  cities_id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
+CREATE TABLE passengers
+(
+  passengers_id SERIAL PRIMARY KEY,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL
+);
+
+
+
 
 INSERT INTO tickets
   (first_name, last_name, seat, departure, arrival, airline, from_city, from_country, to_city, to_country)
